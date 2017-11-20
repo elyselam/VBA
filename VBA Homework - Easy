@@ -1,0 +1,55 @@
+Sub AddVolume()
+    'loop through each worksheet
+    
+    For each ws in Worksheets
+
+        Dim Ticker As String
+        Dim TotalStockVolume As Double
+
+        TotalStockVolume = 0
+
+        'lets you start at row 2 and head down. the only time you do a summary is when it sees a change in brand name'
+        
+        sumTableRow = 2
+
+        Dim LastRow As Long, i As Long
+
+
+
+        Dim WorksheetName As String
+            
+            "find last row
+            LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+                For i = 2 To LastRow
+
+                    If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                
+                'set ticker name in column 1'
+                        Ticker = ws.Cells(i, 1).Value
+
+                'add to ticker total once it sees that the next ticker is different'
+                        TotalStockVolume = TotalStockVolume + ws.Cells(i, 7).Value
+
+                'ticker name goes in column G
+                        ws.Range("I" & sumTableRow).Value = Ticker
+
+                'sum up in column H'
+                        ws.Range("J" & sumTableRow).Value = TotalStockVolume
+                'add one to sum table '
+                        sumTableRow = sumTableRow + 1
+
+                'Now resets the brand total'
+                        TotalStockVolume = 0
+
+            'if the cell immediately following a row is the same brand:'
+                    Else
+                    TotalStockVolume = TotalStockVolume + ws.Cells(i, 7).Value
+
+                    End If
+                Next i
+                
+        'Add header names        
+        ws.Range("I1") = "Ticker"
+        ws.Range("J1") = "Total Stock Volume"   
+    Next   
+End Sub
